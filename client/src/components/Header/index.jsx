@@ -16,12 +16,13 @@ import {
 } from "@mui/material";
 import BakeryDiningIcon from "@mui/icons-material/BakeryDining";
 
-export const Header = () => {
+export const Header = React.memo(() => {
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
   const userData = useSelector((state) => state.auth.data);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
+  console.log("header");
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -41,21 +42,23 @@ export const Header = () => {
       <Container maxWidth="lg">
         <div className={styles.inner}>
           <Box>
-            <BakeryDiningIcon color="primary" fontSize="large" />
+            <Link style={{ textDecoration: "none", color: "black" }} to={"/"}>
+              <BakeryDiningIcon color="primary" fontSize="large" />
+            </Link>
           </Box>
-          <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Typography
               variant="h6"
               noWrap
-              component="a"
-              href="/"
               sx={{
                 display: { xs: "none", md: "flex" },
-                width: '100%',
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
+                width: "100%",
               }}
             >
               Frondend Dev
@@ -100,17 +103,17 @@ export const Header = () => {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem key={Math.random()} onClick={handleCloseUserMenu}>
-                    <Typography
-                      component="a"
-                      href="/add-post"
-                      sx={{
-                        textAlign: "center",
-                        textDecoration: "none",
-                        color: "black",
-                      }}
-                    >
-                      Add post
-                    </Typography>
+                    <Link style={{ textDecoration: "none",}} to="/add-post">
+                      <Typography
+                        component="h6"
+                        sx={{
+                          textAlign: "center",
+                          color: "black",
+                        }}
+                      >
+                        Add post
+                      </Typography>
+                    </Link>
                   </MenuItem>
                   <MenuItem key={Math.random()} onClick={onClickLogout}>
                     <Typography textAlign="center">Logout</Typography>
@@ -132,19 +135,4 @@ export const Header = () => {
       </Container>
     </div>
   );
-};
-
-{
-  /* <>
-                <Link to="/add-post">
-                  <Button variant="contained">Написать статью</Button>
-                </Link>
-                <Button
-                  onClick={onClickLogout}
-                  variant="contained"
-                  color="error"
-                >
-                  Выйти
-                </Button>
-                      </>*/
-}
+});

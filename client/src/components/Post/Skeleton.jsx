@@ -4,7 +4,7 @@ import Skeleton from "@mui/material/Skeleton";
 
 import styles from "./Post.module.scss";
 
-export const PostSkeleton = () => {
+export const PostSkeleton = React.memo(() => {
   return (
     <div className={styles.skeleton}>
       <Stack spacing={1}>
@@ -34,4 +34,4 @@ export const PostSkeleton = () => {
       </Stack>
     </div>
   );
-};
+});

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Grid from "@mui/material/Grid";
@@ -9,7 +9,7 @@ import { CommentsBlock } from "../components/CommentsBlock";
 import { fetchPosts, fetchTags } from "../redux/slices/posts";
 import { useDispatch, useSelector } from "react-redux";
 
-export const Home = () => {
+export const Home =  React.memo(() => {
   const [isPopular, setPopular] = useState(false);
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
@@ -17,14 +17,15 @@ export const Home = () => {
   const [data, setData] = useState([]);
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (e, newValue) => {
+  const handleChange = useCallback((e, newValue) => {
     setValue(newValue);
-  };
+  }, [])
 
+  console.log('render_home');
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
-  const checkSort = () => {
+  const checkSort = useCallback(() => {
     if (isPopular) {
       setData([...posts.items].sort((a, b) => b.viewsCount - a.viewsCount));
     } else {
@@ -35,22 +36,20 @@ export const Home = () => {
         )
       );
     }
-  };
+  }, [isPopular, posts.items]) 
 
-  const filterHandler = (value, obj) => {
+  const filterHandler = useCallback((value, obj) => {
     if (isPopular !== value) {
       setPopular(value);
     }
-  };
-  useEffect(() => {
-    checkSort();
-  }, [isPopular]);
+  },[isPopular])
 
   useEffect(() => {
     if (posts.items.length > 0) {
       checkSort();
-    }
-  }, [posts.items]);
+    }  
+  }, [isPopular, posts.items]);
+
 
   useEffect(() => {
     dispatch(fetchPosts());
@@ -70,7 +69,7 @@ export const Home = () => {
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
-          {(isPostsLoading ? [...Array(5)] : data).map((obj, index) =>
+          {(isPostsLoading ? [...Array(2)] : data).map((obj, index) =>
             isPostsLoading ? (
               <Post key={index} isLoading={true} />
             ) : (
@@ -84,7 +83,7 @@ export const Home = () => {
                 user={obj.user}
                 createdAt={obj.createdAt}
                 viewsCount={obj.viewsCount}
-                commentsCount={3}
+                commentsCount={obj.comments.length}
                 tags={obj.tags}
                 isEditable={userData?._id === obj.user._id}
               />
@@ -101,4 +100,4 @@ export const Home = () => {
       </Grid>
     </>
   );
-};
+});

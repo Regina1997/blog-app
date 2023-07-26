@@ -45,7 +45,7 @@ export const AddPost = () => {
     setText(value);
   }, []);
 
-  const onSubmit = async () => {
+  const onSubmit = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -67,7 +67,7 @@ export const AddPost = () => {
       console.warn(err);
       alert('Ошибка при создании статьи!');
     }
-  };
+  }, [id, imageUrl, isEditing, navigate, tags, text, title]) ;
 
  useEffect(() => {
     if (id) {

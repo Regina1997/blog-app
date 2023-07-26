@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAddComments } from "../../redux/slices/posts";
 
-export const Index = () => {
+export const Index = React.memo(() => {
   const [isLoading, setLoading] = useState(false);
   const [text, setText] = useState("");
   const userData = useSelector((state) => state.auth.data);
@@ -34,25 +34,21 @@ export const Index = () => {
     setText(value);
   }, []);
 
-  const onSubmit = async () => {
+  const onSubmit = useCallback(async () => {
     if (text !== "") {
       try {
         dispatch(fetchAddComments({ id: id, text: text }));
         setText("");
-
       } catch (err) {
         console.warn(err);
         alert("Ошибка при добавлении комментария!");
       }
     }
-  };
+  }, [dispatch, id, text]) 
 
   return (
     <div className={styles.root}>
-      <Avatar
-        classes={{ root: styles.avatar }}
-        src={userData?.avatarUrl}
-      />
+      <Avatar classes={{ root: styles.avatar }} src={userData?.avatarUrl} />
       <div className={styles.form}>
         <TextField
           value={text}
@@ -70,4 +66,4 @@ export const Index = () => {
       </div>
     </div>
   );
-};
+});

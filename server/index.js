@@ -1,4 +1,4 @@
-import express from 'express'
+/*import express from 'express'
 import multer from 'multer';
 import cors from 'cors';
 
@@ -77,4 +77,14 @@ app.listen(process.env.PORT || 4444, (err) => {
     }
 
     console.log('Server OK');
-});
+});*/
+const express = require("express");
+const app = express();
+const product = require("./api/product");
+
+app.use(express.json({ extended: false }));
+
+app.use("/api/product", product);
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server is running in port ${PORT}`));
